@@ -1,0 +1,139 @@
+$primary: #ffeaa7;
+$secondary: #a29bfe;
+$tertiary: #fab1a0;
+
+$text: #2d3436;
+$contrast: #dfe6e9;
+$accent: #fdcb6e;
+
+$multiplier: 1.3;
+
+.keyhole {
+position: fixed;
+inset: 0;
+pointer-events: none;
+background: $accent;
+clip-path: polygon(0% 0%, 0% 100%, 0 100%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%, 100% 100%, 100% 0%);
+z-index: 1;
+}
+
+.arrow {
+position: absolute;
+top: 72.5vh;
+left: 50%;
+z-index: 2;
+animation: float 1s ease-in-out infinite alternate both;
+
+svg {
+	transform: rotate(90deg);
+	stroke: $text;
+	width: 2rem;
+	margin-left: -1rem;
+	height: auto;
+}
+}
+
+html {
+font-size: 100%;
+}
+
+body {
+font: 400 1.2rem/1.45 "Mulish", sans-serif;
+background: $contrast;
+color: $text;
+}
+
+html, body {
+max-width: 100%;
+overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 {
+font-family: "DM Serif Text", serif;
+line-height: 1;
+font-weight: 400;
+}
+
+@for $i from 1 through 5 {
+h#{$i} {
+font-size: #{$multiplier * (5 - $i)}rem;
+}
+}
+
+.section {
+&--primary {
+background: $primary;
+
+	figure {
+		position: relative;
+		left: 50%;
+		width: 100vw;
+		transform: translateX(-50%);
+		margin: 0 0 1em 0;
+		
+		img {
+			width: 100%;
+			object-fit: cover;
+			min-height: 100vh;
+		}
+	}
+	
+	.section__content {
+		padding-top: 0;
+	}
+}
+&--secondary {
+	background: $secondary;
+}
+&--tertiary {
+	background: $tertiary;
+}
+&__content {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 80px 40px;
+}
+}
+
+@keyframes float {
+from {
+transform: translateY(-50%);
+}
+to {
+transform: translateY(50%);
+}
+}
+
+(function () {
+const isAnimationOk = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+// Cnahge to false to make the animations play when the section's in viewport
+const scrub = true;
+
+if(isAnimationOk) {
+	setupAnimations();
+}
+function setupAnimations() {
+	gsap.from(".keyhole", {
+		"clip-path": "polygon(0% 0%, 0% 100%, 25% 100%, 25% 25%, 75% 25%, 75% 75%, 25% 75%, 25% 100%, 100% 100%, 100% 0%)",
+		scrollTrigger: {
+			trigger: ".section--primary",
+			start: "top top", // when the top of the trigger hits the top of the viewport
+  			end: "bottom bottom", // bottom of the trigger hits the bottom of the vp
+			scrub: scrub,
+			markers: false
+		}
+	});
+	
+	gsap.to(".arrow", {
+		opacity: 0,
+		scrollTrigger: {
+			trigger: ".section--primary",
+			start: "top top", // when the top of the trigger hits the top of the viewport
+  			end: "+=200", // scroll 150px down
+			scrub: scrub
+		}
+	});
+}
+}());
+
+Use the above code as an example (EXAMPLE ONLY!) to creat a scroll animation of the existing home page.
